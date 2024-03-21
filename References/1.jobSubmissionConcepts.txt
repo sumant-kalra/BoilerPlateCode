@@ -1,0 +1,176 @@
+=====================================================================================================================================================================================
+1. Embarrassingly Parallel Problem on HPC; Characteristics
+2. The Scheduler; Job; Functionality
+3. Approach to write and submit the job to the cluster; ImportantPoints(a)srun(b)MaxResources(c)Home_vs_Scratch_Dir
+4. Submitting batches of serial jobs (a)JobArray (b)BackgroundProcessesWithinJob (c)BackgroundProcessesWithinJob-Batches (d)GNU_Parallel
+5. RAMdisk
+6. Profiling with Slurm  
+
+References: 
+    https://github.com/sumant-kalra/HPC_Optimization/blob/main/Notes/0.2.JobSubmission.txt  
+    https://support.ceci-hpc.be/doc/_contents/QuickStart/SubmittingJobs/SlurmTutorial.html
+=====================================================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. Problem: Run an "Embarrassingly Parallel Problem" on HPC cluster
+    Characteristics of an Embarrassingly Parallel Problem:
+        - contains a large number of independent tasks that can run in parallel.
+        - the independent tasks are serial in nature. 
+        - little to no coordination/communication required among the parallel tasks (hence no need to create it as an MPI application)
+
+2. The Scheduler 
+    (a) The scheduler implements a batch operating system for the usage of computing resources on HPC. Example - Slurm
+    (b) Job = 'Resource Request' + 'commandsToBeExecuted' 
+                (Do not forget to set up the environment for e.g. by loading the appropriate modules before executing them from the script)
+    (c) Functions performed:
+        - provides the requested computing resources (cores and memory) from the HPC cluster by organizing the workload on the cluster, 
+        - schedules the various job submitted for execution on cluster minimizing the idle time.
+        - uses compicated algorithms that considers many variables like available resources, user's priority, times and resources requested for scheduling.
+
+3. Approach to write and submit a slurm "submission script"
+    WRITE:
+    (a) Prerequisite: Identify the following aspects about the program to be executed on the cluster.
+        1. Number of processes it runs                  --->            --ntasks
+        2. Number of threads in each process            --->            --ncpus-per-task 
+        3. Memory required by each process              --->            --mem-per-cpu
+        4. Control distribution of processes on nodes   --->            --tasks-per-node  
+        Other aspects can also be identified like gpus required etc depending upon the program.
+
+    (b) Write a submission script scriptName.sh
+        1. Shebang
+            #!/usr/bin/env bash                                          
+        2. Slurm directives 
+            #SBATCH --job-name=test 
+            #SBATCH --output=res.txt 
+            #SBATCH --partition=debug 
+            #SBATCH --time=00:10:00
+            #SBATCH --ntasks=1
+            #SBATCH --ncpus-per-task=2
+            #SBATCH --ntasks-per-node=1
+            #SBATCH --mem-per-cpu=1g
+
+            NOTE: 
+            (a) No bash variables are allowed in the parameters.
+            (b) No bash commands are allowed in between any two bash parameters.
+            (c) Job parameters can be specified by: #SBATCH directives in submission script; Environment Variable; Command line parameters from with sbatch // (Right overrides Left)
+        3. Setup the environment (Must load the module used in building to get the required run time libraries)
+            module load OpenMPI 
+        4. Commands to be executed 
+            ./application 
+   
+    SUBMIT: 
+    (a) Test the script first before submitting it as a job.
+        - Execute the script as a shell script on the login node instead of submitting it with sbatch to cluster or request an interactive debug job on cluster using srun
+    (b) Submit the job if the test run is successful
+         sbatch run.sh [commandLineParameters]   
+        
+    Important points:
+    (a) srun (run parallel tasks)
+        Two different modes of operation:
+        1. Submitting the submission script: srun vs sbatch
+            - srun executes in interactive and blocking mode that is the job is tied to the terminal submitting the job, if the SSH session is interrupted for any reason, the srun will automatically be cancelled.
+            - sbatch executes in batch processing and non-blocking mode that is the job runs independent of the terminal and the SSH session, and the outputs are printed in a file.
+            - srun (run parallel tasks) starts 'ntasks' parallel subjobs whereas sbatch just submits the jo with the number of processes being controlled by mpirun or srun called from the script.
+            - srun is mostly used to run immediate jobs but sbatch can be used for later execution of jobs.
+            - srun can not run Job arrays but sbacth can.
+        2. Inside the submission script: srun vs mpirun
+            - srun starts the 'ntasks' number of processes for the command in the submission script and mpirun also executes the 'ntasks' number of processes for the command (if -n argument of mpirun is not used).
+            - srun can replace mpirun if configured but NOT RECOMMENDED.  
+          PREFER NOT TO USE IT UNTIL YOU ARE SURE ABOUT IT. 
+    
+        https://stackoverflow.com/questions/43767866/slurm-srun-vs-sbatch-and-their-parameters 
+        https://stackoverflow.com/questions/51300165/any-use-case-for-mpirun-on-slurm-managed-cluster/51300814#51300814   
+    (b) Why not request for the maximum possible resources from the cluster for any job?
+        "More the resources requested, longer the job will wait in the queue." However, the execution of the job will be faster once the job runs.
+    (c) HOME Vs SCRATCH Directories
+        Generally,
+         HOME   : ExpirationTime-Never; BackedUp-Yes; ReadWriteAccessOnLoginNode; ReadOnlyAccessOnComputeNode
+         SCRATCH: ExpirationTime-Xdays; BackedUp-No;  ReadWriteAccessOnLoginNode; ReadWriteAccessOnComputeNode
+
+4. Submitting batches of serial jobs [Refer to 1.2.SerialJobs.pdf for complete details]
+    Example - Embarrassingly Parallel Problems
+    
+    (a) JobArray
+    (b) BackgroundProcessesWithinJob
+    (c) BackgroundProcessesWithinJob-Batches
+    [d] GNU Parallel
+
+    (a) JobArray: 'N' number of jobs are submitted at once for scheduling
+        - copies the same job into 'N' distinct jobs while each job is scheduled separately.
+        - Slurm parameter: --array=1-N 
+        - Each distinct job has distinct value of $SLURM_ARRAY_TASK_ID 
+        - The slurm parameters in the submission script are for each of the job.
+        LIMITATION:
+        However, it is not suitable for a large number of 'SHORT' serial jobs (execution time of a few seconds) because each subjob is scheduled separately that adds a scheduling overhead of minutes (~1 min) on each of the job.  
+    
+    (b) BackgroundProcessesWithinJob: 'N' background processes are started with a single job submission
+        - use 'wait' as the last command in the submission script otherwise the job will terminate as the control reaches the end of the script; 'wait' will keep the job running until all the background processes are done.
+        LIMITATION:
+        " 'N' is large, say larger than the number of cores on a single node."
+        If the number of processes 'N' is such that the job has to wait for a considerable amount of time in the job queue to get 'N' number of cpus for the optimal execution time,
+        then the processes might need to be started in batches of a reasonable size that is number of cpus requested < N.
+    
+    (c) BackgroundSubJobsWithinJob-Batches: 'N' background processes are started in batches of a size 'K' processes per batch in the job 
+        LIMITATION:
+        "Cpus load imbalance due to varying execution times of the processes in the job"
+        Cpus that finish first will remain idle until the last process finishes.
+    
+    (d) GNU Parallel: Scheduler within scheduler
+        - if one of the cpu is free, it is assigned the process from the next batch 
+        - works very well by filling all the gaps for a job with a large number of processes ~100
+           parallel -j <numberOfTasksInEachBatch>   <<EOF
+            -----
+            ----- each line as a process ------
+            -----
+           EOF
+        - the tasks can also be provided in a file and provides as input in the place of EOF
+        - PREFER as most of the times, the time taken by each process is unknown. 
+
+5. RAMdisk - Local I/O
+    [Refer to 1.2.SerialJobs.pdf for complete details]
+    - A part of the RAM is configured to be used as secondary memory for I/O
+    - Much faster than directly writing to the secondary memory (SDD/HDD)
+    - Useful with jobs involving heavy I/O, for e.g. each of the embarrassingly parallel problem's processes, say 1000 processes, writing unavoidably to files
+    Important Points:
+    - HPC cluster must be configured to use this feature.
+    - RAMdisk = a location say /dev/shm/ is configured and should be used as working directory
+    - data needs to be staged in/out through the submission script
+    - A part of the RAM is sacrificed
+    
+6. Profiling with Slurm - for optimization of resources to be requested for unknown programs 
+    - Slurm can also be used for profiling using the information about running or completed jobs using sstat and sacct commands
+    - Prefer profiling tools than the slurm commands for rigorous analysis 
+    - Slurm commands for optimization of resources to be requested; Particularly useful for programs for which nProcesses and nThreads are unknown.
+        "More the resources requested, longer the job will wait in the queue"
+        (a) Submit the job with some initial estimates of resources
+        (b) Analyse the Feedback/Statistics from Slurm database using the commands 
+        (c) Extrapolate for the next jobs
+    Observations:
+    1. top command: CPU Usage 100%      --> 1 core is fully utilized
+                    CPU Usage n*100%    --> If n is a positive integer, the n cores are fully utilized else if n is a fraction then context switching 
