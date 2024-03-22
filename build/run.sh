@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
 #SBATCH --job-name=appSK
+
 #SBATCH --ntasks=N
-#SBATCH --ncpus-per-task=K
+#SBATCH --cpus-per-task=K
 #SBATCH --mem-per-cpu=Qg
-#SBATCH --tasks-per-node=R
-#SBATCH --partition=partitionName
+#SBATCH --ntasks-per-node=R
 #SBATCH --exclusive   
+
+#SBATCH --partition=partitionName
 #SBATCH --output=outputs/result-%j.out       
 #SBATCH --error=outputs/result-%j.err
 #SBATCH --mail-type=FAIL,END
@@ -20,6 +22,10 @@ module load <moduleN_RequiredForApp>
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 srun app [appArg1] [appArg2] ...  [appArgN]
+
+# 1. Test the script without sbatch 
+# 2. Submit to slurm (if successful) with: sbatch run.sh 
+
 
 # References:
 # https://slurm.schedmd.com/sbatch.html

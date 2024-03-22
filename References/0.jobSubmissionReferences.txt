@@ -4,46 +4,7 @@
 
 2. PBS Job Scheduler (Portable Batch System): https://2021.help.altair.com/2021.1.2/PBS%20Professional/PBSUserGuide2021.1.2.pdf  
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-1. SLURM Job Scheduler:
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-1. SBATCH Parameters:
-    --constraints                                   // choose a specific feature (e.g. a processor type or a network type)
-    --gres(or --gpu)                                // use a specific resource (e.g. a GPU) 
-    --license                                       // access a specific licensed software 
-    --partition                                     // choose a partition
-    --test-only                                     // Enquire when the job will start 
-
-    --job-name=SomeName                             // Sets the job name 
-    --comment="Something that I want"               // Attaches a comment to the job
-            
-    --mail-type=BEGIN|END|FAILED|ALL|TIME_LIMIT_90  // Refer to the documentation 
-    --mail-user=my@mail.com 
-
-    --output=resultFileName-%j.txt                  // %j is replaced with JobId
-    --error=errorFileName-%j.txt
-            
-    --time=<duration>                               // Refer to the documentation for the duration format
-    --exclusive                                     // Allocated nodes (cores of the nodes) are not shared with other jobs but the memory allocated is only as per request 
-    --exclusive --mem=0                             // exclusive + all the memory on a node
-
-    --gpus=N                                        // N GPUs for the job 
-    --gpus=Teslav100:1                              // 1 specific GPU for the job
-    --gres=gpu:N                                    // N GPUs per allocated node 
-    --gres=gpu:Teslav100:1                          // 1 specific GPU per allocated Node
-
-    USAGE:
-    # Define the number of tasks, the number of cpus required for each task and memory required for each cpu
-       --ntasks=N --cpus-per-task=K --mem-per-cpu=Qu                                 // Allocates N*K CPUs, N processes with K threads in each process, Qu for each core; 
-                                                                                        Same or different nodes 
-                                                                                        variable $SLURM_CPUS_PER_TASK is set with --cpus-per-task 
-    # Control the number of tasks per node (one node can run multiple tasks, how many tasks per node?)
-       --ntasks=N --cpus-per-task=K --mem-per-cpu=Qu --ntasks-per-node=M             // Allocates N*K CPUs, N processes with K threads in each process, Qu for each core;
-                                                                                        N tasks distributed over different nodes with M tasks on each node;
-                                                                                        If M==1, each task is run on a different node;
-    NOTE: 
-    - There is another option --nodes that can control the distribution of tasks on nodes when used with --ntasks but preferably use --tasks-per-node for better control 
-
+ 
 2. Monitor and Inspect the submitted Jobs: squeue; sstat; scontrol; sacct 
     [PENDING OR RUNNING]
     (a) squeue : Information about the jobs in slurm scheduling queue [PENDING OR RUNNING] 
