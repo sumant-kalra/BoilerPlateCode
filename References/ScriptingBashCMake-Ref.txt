@@ -1,0 +1,341 @@
+Linux Fundamentals:
+
+    https://academy.hackthebox.com/module/18/section/94 
+    https://www.youtube.com/playlist?list=PLIhvC56v63IJIujb5cyE13oLuyORZpdkL
+    sudo sudoers
+
+Shell Scripting Fundamentals:
+
+    #!/usr/bin/env bash
+    File execute permissions
+    type -a <ShellCommand> 
+    help <ShellCommand>     # For Shell-built-in commands
+    man <Non-ShellCommand>  # For Non-Shell-built-in commands
+    0       : 'true'   # Success exit code
+    Non 0   : 'false'  # Failure exit code
+
+    watch -n 1 tail your_file.txt	# display the last 10 lines of a file every 1 second
+
+    echo test 2>&1      # Redirect stderr to stdout; >& is syntax to redirect a stream to another file descriptor; https://stackoverflow.com/questions/818255/what-does-21-mean 
+        0 is stdin 
+        1 is stdout 
+        2 is stderr 
+
+FROM NETWORK CHUCK:
+
+    which $SHELL
+    echo " "
+    sleep 1
+    whoami
+    date
+    exit 1
+    uptime
+
+    
+    A.  Variables:
+            0. Bash does not has a type system, all the variables are strings
+            1. Creation:                            var="ABS"
+            2. Create and read from user input:     read -r var # -r means raw input, backlash escaping is disabled; Use -r always
+                                                    read -r -p "Please enter your name" var # A prompt before the input is read
+                                                                                            # help read # check exit status
+                                                                                            # https://linuxhint.com/use-read-command-bash/
+            3. Modify:                              var=52
+            
+            4. Access:                              $var
+                                                    ==========================================================================
+                                                    ${var}     # Prefer this as it is a standard in many scripting languages
+                                                               # useful in appending text to $var like: echo "${var}SomeText"
+    							                               # and mandatory for arrays
+                                                    ==========================================================================
+                                                    "${var}"   # Use it only while using variables as strings, for example:
+                                                               # echo "__" or other string operations like appending.
+                                                               # Not needed because by default all the variables are strings 
+                                                               # ${var} can be converted into numeric types but "{var}" can not be.
+                                                               # "${var}" is explicitly a string. 
+                                                                	
+            
+            5. ( CommandOutputInVariable ):         var=$( <command> )   
+            11.(( Arithmetic expression )):         var=$(( <expression> ))     # Perform arithmetic and produce the result
+                                                    (( <varibleManipulation> )) # Perform arithmetic, 
+                                                                                  possibly changing the values of shell variables, 
+                                                                                  but don't produce its result
+                                                    
+                Note: Bash can not do floating points by default
+
+            6. Examples:
+                echo $var       # Output = 52
+                echo ${var}     # Output = 52
+                echo "$var"    
+                echo "${var}"
+                echo "${var}56" # Output = 5256
+                echo "$var56"   # Output = ERROR, var56 does not exist
+                echo var        # Output = var 
+                echo '$var'     # Output = $var, String Literal in ' ' - printed as is
+ 	    
+	    E. Arrays : {} is mandatory to access the contents
+		myArray1=(1 8 "this" 78 "that")
+		myArray2=( $( command ) ) 	# Command output in an array
+	
+		arr=()		    :	Create an empty array
+		arr=(1 2 3)	    :	Initialize array
+		${arr[2]}	    :	Retrieve third element, {} is mandatory
+		${arr[@]}	    :	Retrieve all elements, {} is mandatory
+		${!arr[@]}	    :	Retrieve array indices, {} is mandatory
+		${#arr[@]}	    :	Calculate array size, {} is mandatory
+		arr[0]=3	    :	Overwrite 1st element
+		arr+=(4)	    :	Append value(s)
+		str=$(ls)	    :	Save ls output as a string
+		arr=( $(ls) )	:	Save ls output as an array of files
+		${arr[@]:s:n}	:	Retrieve n elements starting at index s	
+
+               
+            7. Built-in or System variables:
+                $RANDOM
+                $SHELL 
+                $USER 
+                $PWD
+                $HOSTNAME
+                $?          : Exit status of the last process to run
+                $#          : Count of the command line arguments passed to the script
+                $@          : All the command line arguments passed to the script
+                $0          : Name of the script
+                $1          : Arg1
+                $2          : Arg2
+                .           : 
+                .           :    
+
+            8. Local variables       : not available in the child processes
+            
+            9. Environment variables : available in child processes
+                                       export var="val"
+            
+            10.Environment variables in .bashrc
+               Environment variables are set per process. This means that the environment variable needs to be redefined
+               with every terminal. 
+               However, this process can be automated by defining the variable in the .bashrc script in the home dir.
+               .bashrc is run at the start of a new bash terminal. 
+
+    B. Conditionals:
+        1. if statements
+
+                if [[ ${coffee} == "y" ]]; then
+                    echo "You are awesome!"
+                elif [[ ${coffee} == "n" ]]; then
+                    echo "Leave now!!!"
+                else 
+                    echo "Invalid input"
+                fi 
+            
+           # https://stackoverflow.com/questions/3427872/whats-the-difference-between-and-in-bash
+
+        2. case statements
+
+            case ${var} in 
+                1)
+                    type="Samurai"
+                    hp=10
+                    attack=20
+                    ;;
+                2)
+                    type="Prisoner"
+                    hp=20
+                    attack=4
+                    ;;
+                3)
+                    type="Prophet"
+                    hp=30
+                    attack=4
+                    ;;
+            esac
+
+        3. Note:
+            Since all the variables in bash are string, all the conventional comparison operators < <= > >= etc 
+            will compare the variable values as string.
+            To compare the numeric values, use the following:
+                ${num1} -eq ${num2}                  check if 1st  number is equal to 2nd number
+                ${num1} -ge ${num2}                  checks if 1st  number  is greater than or equal to 2nd number
+                ${num1} -gt ${num2}                  checks if 1st  number is greater than 2nd number
+                ${num1} -le ${num2}                  checks if 1st number is less than or equal to 2nd number
+                ${num1} -lt ${num2}                  checks if 1st  number  is less than 2nd number
+                ${num1} -ne ${num2}                  checks if 1st  number  is not equal to 2nd number
+        
+
+    C. Loops:
+        1. while loop
+
+            x=1
+            while [[ ${x} -le 100 ]];
+            do
+                echo "Hey, I just did ${x} pushups"
+                (( x ++ ))                          # same as x=$(( $x + 1 ))
+            done
+
+            #################################################
+            ## READ FROM A FILE LINE BY LINE
+
+            x=1
+            while read -r line; 
+            do
+                echo "Line ${x} : $line"
+                (( x ++ ))
+            done < file.txt                         # stdin redirected to the file to be read
+
+            # read line returns success (exit code 0) regardless of whether the line is empty or not
+            # It returns 'false' (non-zero) exit code only when the end-of-file has been reached or another error occurs
+
+            #################################################
+
+            while true;
+            do
+                echo "This is an infinite loop"
+            done
+
+        2. until loop 
+
+            until [[ ${order} == "coffee" ]];
+            do
+                echo "Would you like coffee or tea?"
+                read order
+            done
+            echo "Excellent choice, here is your coffee."
+
+        3. for loop 
+
+            for cups in 1 2 3 4 5 6 7 8 9 10;                   # {1..10}
+            do
+                echo "Hey, you've had $cups cups of coffee today
+            done
+
+            ##################################################################################################
+            ## READ FROM A FILE WORD BY WORD
+
+            for x in $( cat cities.txt );
+            do
+                echo $x
+            done < testCities.txt
+
+            # Note read command reads the file or any other input line by line
+            ##################################################################################################
+
+    D. Control flow statements
+        break
+        continue
+
+
+    Useful References:
+    	https://stackoverflow.com/questions/31255699/double-parenthesis-with-and-without-dollar 
+
+    F. awk program (Text processing tool)
+	Analyzes text file line by line
+
+	$0 : The line being processed
+	$1 : First field(word) of the current line
+	$2 : Second field(word) of the current line
+	
+	NR : Number of lines of the file processed so far
+	NF : Number of fields/words in $0 (the line being processed)
+	
+	awk '{<Command>}' file 					 # executing <setOfCommands> for each line in the file
+	awk -F<separator> '{<Command>}' file 			 # -F<separator> defines the separator to be used for identifying fields,
+								 # the default separator is space 
+	awk '{<Command> BEGIN{<Command>} END{<Command>}' file
+			# BEGIN{} and END{} are constructs that define the commands to be executed only once
+			# BEGIN{} for commands to be executed before the processing of the file
+			# END{} for commands to be executed after the processing of the file 
+		
+	Examples:
+		awk '{print $1, "total value = ", $2*$4}' file 	# prints, for example: fruits total value = 670
+		awk '{value += $2*$4} END{print "Total= ", value}' file
+		awk '{av += $4} END{print "Average Price= ", av/NR}' file
+		awk '{print $2^2*sin($4)+exp($4)}' file 
+		awk -F: '{print $4}' file 			# : is separator
+
+Useful Commands:
+1. wait     : wait until all the background processes started by the current shell are exited;
+   wait [n] : wait for the background process with pid = n to exit
+
+2. <command1>;<command2>  : Multiple commands in a single line separated by semicolon as if executed in different lines 
+3. <command1>&&<command2> : Execute command2 only if the command1 is successful  
+4. /dev/null              : Null device in unix; 
+                            https://linuxhint.com/bash_stdin_stderr_stdout/
+                            https://linuxhint.com/what_is_dev_null/ 
+                            https://stackoverflow.com/questions/818255/what-does-21-mean
+5. timeout                : https://linuxize.com/post/timeout-command-in-linux/
+6. yes                    : https://www.ibm.com/docs/en/aix/7.1?topic=y-yes-command 
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CMAKE Scripting 
+
+1. Conceptual similarities with bash scripting
+	1. All the variables are strings
+	2. Variable access by dereferencing
+		${VAR} # "${VAR}" only while using as strings like printing to console or appending text
+		       # not mandatory since the variables are strings by default. Used only for better readability
+
+2. Conceptual differences with bash scripting
+	1. Variable definition
+		set(VAR val) # VAR=val
+	2. Variable dereferencing in conditions and loops
+		CMAKE: Automatically dereferenced, if ${VAR} is used the it will try to dereferenece the value in VAR
+		BASH:  Dereference explicitly
+	3. Printing to console
+		message("__") # echo "__"
+	
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CMake fundamentals for as a meta build system
+
+1. Targets
+	1. Executable : add_executable()
+	2. Library    : add_library()
+    After defining the targets, define their properties via:
+    (a) target_link_libraries()
+    (b) target_include_directories() 
+
+2. add_subdirectory()
+	Searches for CMakeLists.txt file in the specified directory, and creates it's corresponding directory with the same name in the build.
+	All the files related to the target are built in the new directory in the build.
+	It provides a way to modularize the build.
+
+3. Linking and Include Directories
+	Each target has -
+	1. Dependency targets: The targets on which the target depends, and hence need to be linked to it.
+	2. Include directories: The include paths from where the target can include files.
+
+4. Propagation of target properties UP IN THE HIERARCHY
+	
+	BEHAVIOUR IS EXACTLY AS IN C++ CLASS ACCESS SPECIFIERS
+	PUBLIC: WILL BE AVAILABLE IN THE DEPENDENT TARGETS AS WELL
+	PRIVATE: WILL NOT BE AVAILABLE IN THE DEPENDENTS TARGETS
+	
+	Each target has some properties when set can be propagated to it's dependent targets by using the attributes PUBLIC PRIVATE.
+	T1 <-- T2 <-- T3 
+	
+	(a) target_link_libraries()
+	     PUBLIC
+	 	target_link_libraries(T2 PUBLIC T3) 
+	 	target_link_libraries(T1 <PUBLIC || PRIVATE> T2)
+	 	[T3 is a public member of T2, and it will be available in T1 as well]	
+	 	automatically, target_link_libraries(T1 PUBLIC T2).
+	 	All the libraries linked to T2 are linked to T1 automatically.
+
+	     PRIVATE
+	 	target_link_libraries(T2 PRIVATE T3) 
+	 	target_link_libraries(T1 <PUBLIC || PRIVATE> T2)
+	 	[T3 is a private member of T2, and it will not be available in T1 ]
+		the libraries linked to T2 are NOT linked to T1.
+	
+	 (b) target_include_directories()
+	     PUBLIC
+	  	All the paths added as include directories for T2 are available as paths to T1
+	     PRIVATE
+	 	Paths added as include directories for T2 are NOT available as paths to T1
+
+Note:
+target_link_libraries() is used before using target_include_directories() to define the hierarchy of linking.
+	

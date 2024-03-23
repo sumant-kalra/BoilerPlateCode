@@ -1,0 +1,39 @@
+Linux Tips:
+    1. Shortcuts
+
+        ^xe                 : Edit and Execute (Note: default text editor must be set)
+        sudo !!             : !! is the previously executed command
+        tail -f fileName    : Real time
+        ^r                  : Reverse search the commands executed
+        cd -                : Back
+	apropos <keyword>  : Search the keyword
+	cat <file> | wc -l  : word count, number of lines	
+
+    2. alias <shortHand>="<command>"
+
+    3. File creation with cat
+
+        cat > <newFileToBeCreated>           : Creates a new file that stores the text being typed to cmdline; Stop using ^d 
+        cat << EOF > <newFileToBeCreated>      : Creates a new file that stores the text being typed to cmdline; Stop when EOF is typed   
+
+    4. Dealing with directories:
+
+        mkdir -p ./parentDir/childDir/child2 : Creates heirarchy of the directories 
+        tree                                 : Displays a tree structure of the directories 
+
+    5. lscpu : Displays processor architecture
+
+    6. netstat -tlnp
+    7. nc -z localhost 3306
+    8. fuser <fileName>
+    9, source <fileName>                     : Runs all the commands listed in <fileName> one by one; Useful -> Shell script but no exe permissions 
+    10. find <directoryPath> -name <fileName>: Searches for the fileName in all the directories and subdirectories of directoryPath	    
+
+HPC Cluster Commands:
+    1. numactl -H
+    2. module avail                          : List of all the modules available on cluster to load
+
+
+
+
+

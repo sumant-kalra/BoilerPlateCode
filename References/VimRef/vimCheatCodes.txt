@@ -1,0 +1,52 @@
+Modes in Vim:
+
+1. Command mode 		ESC [Default & Preferred]
+2. Execute mode 		:<>
+3. Text mode			i
+
+Topics:
+
+0. List lines numbers 		:set number
+1. Save the file 		:w
+1. Save as newFile.txt		:w <newFile.txt>
+1. Close the file		:q
+1. Save and Close the file	:wq or :x
+1. Close without saving		:q!
+1. Undo				u
+1. Redo				^r
+
+1. Search			/pattern ; n ; N
+1. Find & Replace first (current line)         :s/old/new
+1. Find & Replace all (current line) :s/old/new/g
+1. Find & Replace all (file) :%s/old/new/g 
+
+1. Cut/Copy/Paste/Delete/Replace				
+   
+   1. Select text		 v	   
+   1. Copy the selected text     y
+   1. Cut/Delete selection       d 
+   1. Paste selected text  	 p	
+   1. Replace selected text      r	
+
+   1. Cut/Delete current line    dd
+   1. Copy current line 	 yy
+
+1. Navigation
+   
+   1. Beginning of the file	 gg
+   1. Specific line number       <Num>gg
+   1. End of the file		 G
+   1. <- v ^ ->		       	 g h j k
+   1. Start of statement 	 Shift (
+   1. End of statement		 Shift ) 
+   1. Word to right 		 w
+   1. Word to left		 b
+   1. End of the line            $	   
+
+1. Vim set up as an IDE:
+    https://www.youtube.com/watch?v=7-dfpQ5sexk&t=465s&ab_channel=TimothyUnkert 
+   Directories in vim   ^b
+
+1. Autoformat C++ code on saving:
+    gg=G
+

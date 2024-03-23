@@ -1,0 +1,124 @@
+https://lldb.llvm.org/use/map.html 
+0. Generate a debug build:
+    Building the application through command line:
+        Use '-g' command line argument
+    With CMAKE:
+        Use '-D CMAKE_BUILD_TYPE=Debug' command line argument
+        
+1. Start lldb/gdb with the executable loaded:
+    lldb program
+    lldb -- program argument1 argument2 argumentN
+
+    gdb program 
+    gdb --args program argument1 argument2 argumentN
+
+2. Running:
+    run
+    r
+    
+    For gdb, to display the code along: 
+    layout next
+    Ctrl-x a 
+    https://stackoverflow.com/questions/8409540/how-to-close-layout-src-windows-in-gdb
+    https://sourceware.org/gdb/onlinedocs/gdb/TUI-Keys.html#TUI-Keys
+    https://sourceware.org/gdb/onlinedocs/gdb/TUI-Commands.html     
+
+3. Set breakpoint:
+    (lldb)
+    break set -f filename.cpp -l #linenumber
+    br s -f filename.cpp -l #linenumber
+    b filename.cpp : #linenumber
+  
+   Breakpoints with symbols:
+    b main
+    b methodName(datatype1)
+    b ClassName::methodName(datatype1, datatype2)
+    b namespace::methodName(datatype1, datatype2)
+
+    (gdb)
+    break filename.cpp:#lineNumber
+    break main 
+    break methodName(datatype1)
+    break ClassName::methodName(datatype1, datatype2)
+    break namespace::methodName(datatype1, datatype2)
+
+4. Using breakpoints:
+    (lldb)
+    br list
+    
+    (gdb)
+    info break  
+
+5. Deleting breakpoints:
+    br del #breakpointNumber
+    br del
+
+    delete #breakpointNumber 
+    delete 
+
+6. Navigate:
+    next
+    n
+    continue
+    c
+    step
+    s
+
+7. Inspect Variable:
+    print varName
+    p varName
+    
+    Inspect variables with in the current callstack:
+    frame variable
+    fr v
+    
+    Go back to the current line of execution:
+    frame select
+    fr s
+   
+    (gdb)
+    info args 
+    info locals
+    frame
+
+
+8. Backtrace and frames:
+    Backtrace or Callstack:
+    bt
+    
+    Switching frames:
+    frame select #frameNumber
+    f #frameNumber
+   
+    (gdb)
+    frame #frameNumber 
+
+    If a core-dump is encountered, it provides all the details about the call stack number, filename and line number
+    
+9. Watch points: [Break at the debug point if the value of the variable is read, changed (default) or either]
+    [The program must be running in order to set the watchpoint]
+    
+    Global variable:
+    watchpoint set variable variableName
+    watchpoint set variable -w read | write | read_write variableName
+    w s v variableName
+    
+    Member variable:
+    w s v obj.variableName
+   
+    (gdb)
+    watch globalVariableName  
+
+10. Kill the process:
+    kill
+
+11. Exit the debugger:
+    quit
+    CTRL + D
+    
+12. manuals:
+    help
+    help commandName
+    
+    
+    
