@@ -265,9 +265,28 @@ Useful Commands:
 
 
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CMAKE Basics & Pitfalls
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+* CMAKE: metabuild system that enables 'Cross-Compilation' of C++ projects.
+* Pitfalls: 
+    * A CMAKE project that is the source code and all it's libraries (external or internal, prebuilt or built with source) must be set
+      that no change in the CMAKE files is required when built for different platforms.
+    * The libraries should be installed such that their builds provide cmake config files that can be used with find_package() command of CMAKE. 
+    * If one finds itself writing CMAKE files with manual direction of paths related to the libraries, then it is a wasted effort
+      because the project will not build on platforms without mandating changes in the CMAKE files. 
+      Better to use MAKE in such scenarios.    
+* LEARNINGS: 
+    * Use CMAKE only for large production projects like 'cauldron'.
+    * Use MAKE for your personal projects on both Linux and Windows as both support MAKE file system. 
+        This will need nominal changes in MAKE files if the project needs to be cross-compiled, which is rare for your case.
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+CMAKE Documentation: https://cmake.org/cmake/help/latest/
+ https://www.youtube.com/playlist?list=PLCiOACzVKBLnDIWYrDxBlsWTidEPhJPy-
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 CMAKE Scripting 
++++++++++++++++
 
 1. Conceptual similarities with bash scripting
 	1. All the variables are strings
@@ -283,12 +302,80 @@ CMAKE Scripting
 		BASH:  Dereference explicitly
 	3. Printing to console
 		message("__") # echo "__"
-	
+    
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Commonly used commands and variables
+++++++++++++++++++++++++++++++++++++
+
+cmake_minimum_required()
+project()
+
+if()
+elseif()
+endif()
+
+NOT 
+STREQUAL
+
+UNIX
+APPLE
+WIN32
+
+set()
+
+CMAKE_BUILD_TYPE
+CMAKE_CXX_FLAGS
+CMAKE_CXX_FLAGS_DEBUG
+CMAKE_CXX_FLAGS_RELEASE
+
+message()
+
+FATAL_ERROR 
+STATUS
+
+add_compile_definitions()
+add_executable()
+add_subdirectory()
+
+add_library()
+STATIC 
+SHARED
+
+target_link_libraries()
+target_include_directories()
+PUBLIC 
+PRIVATE
+
+PROJECT_SOURCE_DIRECTORY
+CMAKE_CURRENT_LIST_DIR
+
+--------------------------
+
+find_package()  
+# finds the package installed in the system searches for cmake config files of the packages. 
+# A package must be installed using CMAKE to get its cmake config files that enables the package to be used in any project.
+# Each library (your or external) must be created in the CMAKE way as a package that is installed in the system using install(),
+  found by using find_package() command. The project should not need any changes in the cmake files for cross-compilation.
+
+CMAKE_PREFIX_PATH   # CMAKE variable to specify non-standard paths to search of packages during find_package() execution.
+
+install()           # works at the issue of 'make install'
+    
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Common tasks
+++++++++++++
+* Create an executable 
+* Create a static library
+* Create a dynamic library 
+* Link to the created/prebuilt static library 
+* Link to the created/prebuilt dynamic library 
+* Link to libraries installed in system 
+* Create a MPI application 
 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 CMake fundamentals for as a meta build system
++++++++++++++++++++++++++++++++++++++++++++++
 
 1. Targets
 	1. Executable : add_executable()
