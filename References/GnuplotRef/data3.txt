@@ -1,0 +1,19 @@
+# data3.txt
+
+# There is a format to provide data for 3d plots, if it is not followed then it shows an error
+# Club the data points such that x is of the same value
+# Provide a blank line at the transition
+
+# x y z
+-1  -1  2.000
+-1  0   1.000
+-1  1   2.000
+
+0   -1  1.000
+0   0   0.000
+0   1   1.000
+
+1   -1  2.000
+1   0   1.000
+1   1   2.000
+

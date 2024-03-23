@@ -1,0 +1,98 @@
+Types of plots:
+    1. 2D plots
+    2. 3D plots
+    3. Parametric plots
+
+
+Basics Commands:
+    gnuplot // Start the gnuplot in the command line
+    quit    // quit gnuplot
+    set dummy t // change the independent variable from x(default) to t
+
+1. 2D Plots:
+
+    1. Plotting y = f(x)
+        plot x      // y = x 
+        plot x**2   // y = x^2
+
+    2. Providing range for independent and dependent variables
+        plot [-5:5] [-2:4] x   // [RangeX] [RangeY] y = f(x)
+        plot [-5:5] [-2:4] x,x**2,sin(x),besj0(x)  // Plot multiple functions in the same graph
+        plot [-6:] [:7] x   // Set only the upper or the lower limit, the empty or the * are determined by the gnuplot automatically
+        plot [-6:*] [*:7] x
+
+    3. Plotting data points from a file            // Columns are indexed starting from 1
+        plot "data.txt" using 1:2 with points   // data points in the file "data.txt" with x in column 1 and y in column 2
+        plot "data.txt" using 1:3 with points   //                                    with x in column 1 and y in column 3
+        plot "data.txt" using 1:2 with line
+        plot "data.txt" using 1:3 with line
+        plot "data.txt" using 1:3               // default is with points
+    
+    4. Plotting y = f(x) and data points in the same graph
+        plot "data.txt" using 1:3 with points,exp(-0.5*x)
+    
+    5. Replotting a new plot on the graph already open
+        replot "data.txt" using 1:2
+        replot 2*x
+    
+    6. Powerful ways of using the keyword 'using'  // using ():() // () can have mathematical operations involving columns $1 $2 $3
+        plot "data.txt" using ($1):($2*sin($1)*$3)
+        replot 2*x*sin(x)*exp(-x/2)
+        plot "data.txt" using (log($1)):(log($2))
+    
+    7. Plotting the data written to standard output of any command
+        plot "<./area" using 2:4
+    
+    8. Save the plots in files, change the terminal where gnuplot outputs the plot
+        plot "data.txt" using 1:3
+        set terminal jpeg   // sets the output to be in jpeg format - binary data converted to ASCII is printed in the console
+        set output "data.jpeg"  // sets the file name to be used as output
+        // Any plotting command here will go into the "data.jpeg"
+        replot                  // repeats all the previous plotting commands 
+        set output              // closes the file "data.jpeg" - Better close the file after plotting once
+        set terminal qt         // set the qt as the terminal for plotting
+
+        // Saving the animation in a gif file
+        set terminal gif animate delay 4    // Export the output to a gif; 
+                                            // 'animate' says to save the animation; delay <num>: time delay <num> after which the output is saved in 1/100th of a second
+        set output "filename.gif"           // Saving the output to a file
+
+2. 3D plots - splot
+    1. Plotting functions
+        set pm3d
+        set hidden3d
+        set size ratio 1
+        set isosample 50
+        splot [-2:2] [-2:2] exp(-x**2-y**2)
+
+    2. Plotting data points
+        set pm3d
+        set hidden3d
+        set size ratio 1
+        splot "data3.txt" with line // Note we did not specify any 'using'
+
+3. Parameterized plots
+    on plane(2D) --> it forms a curve; x(t) y(t); t as the dummy variable in 2D(curve)
+    on space(3D) --> ot forms a surface; x(u,v) y(u,v) z(u,v); u and v as the dummy variables in 3D(surface)
+        set parametric  // Set the graphs to parametric plots mode
+        plot sin(t),cos(t)  // Plots a circle
+        splot cos(u)*cos(v),cos(u)*sin(v),sin(u)  // Plots a sphere
+
+==================================================================================================================
+USEFUL COMMANDS
+==================================================================================================================
+plot -pi
+plot pi 
+
+plot "Circle.dat" using 1:2 with lines title "x(t)"
+replot "Circle.dat" using 1:3 with lines title "y(t)"
+
+help atan2
+
+load "animate2D.gnu"
+set term wxt 0    # Sets the terminal to display the plot window
+set xrange [-10:10]    # Sets the range of the x-axis
+set yrange [-10:10]    # Sets the range of the y-axis
+set size ratio -1    # Sets the aspect ratio to achieve square axes
+set grid    # Adds a grid to the plot
+

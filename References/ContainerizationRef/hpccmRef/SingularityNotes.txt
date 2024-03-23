@@ -1,0 +1,115 @@
+//////////////////////////// Setting up Singularity container maker (LINUX application) ////////////////////////////////////////
+Docker: built by root user; run by any user
+Singularity: built by root user; run by any user (Preferred for HPC)
+
+# Singularity images:
+	Flat, Single file, Signing and encryption
+# Docker images
+	Layered, Opaque, Open Contaiers Initiative (OCI) standard
+# Docker builds in Layers format that is each command added adds a new layers which is complete in itself so the size of the 
+	docker image grows by adding up. But this has an advantage that while building the image if the network interrupts then it
+	can restart from where it left by using the latest layer in the cache where as the singularity has to build from the start
+# Singularity can easily import Docker images
+	So, first build the docker then import it to the singularity
+
+https://singularity-tutorial.github.io/01-installation/
+
+1. Setup Neuro Debian package manager in your LINUX ditribution : 'singularity-container' is a part of Neuro Debian package manager which is not included by default in the LINUX distributions
+	wget -O- http://neuro.debian.net/lists/focal.au.libre | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
+	sudo apt-get install curl
+	curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+	sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+2. Install singularity-container: 2.6.1
+	sudo apt-get update
+	sudo apt-get install singularity-container
+3. Install python3
+4. Install python3-pip package manager
+	sudo apt install python3-pip
+5. Install hpccm python-pip3 package: 20.9.3
+	pip3 install --proxy proxy-eu.shell.com:8080 hpccm
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+1. Generate singularity definition file ----------> Refer the documentation: https://github.com/NVIDIA/hpc-container-maker/tree/master/docs; https://singularity.lbl.gov/quickstart
+	# There are two ways to generate the singularity container's definition file
+		# 1. Use hpccm command line tools passing a recipe file and other arguments and run the command to get the singularity definition file  
+				hpccm --recipe recipeFileName.py --format 'singularity' > Singularity.def
+				The recipeFileName.py looks like -
+					Stage0 += baseimage(image='centos:7')
+					Stage0 += gnu()
+
+		# 2. Make a python script and run it to get the singularity definition file
+				./script.py > Singularity.def
+			The python script looks like this -->
+			
+				#!/usr/bin/env python
+
+				import hpccm
+
+				# Set to 'docker' to generate a Dockerfile or set to 'docker' to
+				# generate a Docker definition file
+				hpccm.config.set_container_format('singularity')
+
+				print(hpccm.primitives.baseimage(image='centos:7'))
+				print(hpccm.building_blocks.gnu())
+				
+			In this approach, you have to load hpccm module, the building blocks and primitives from the hpccm module into your python script
+			The python script provides the flexibilty but the user has to take care of input and output
+		
+	# We decide to you the second approach that is make a python script by adding the recipe file code in the script itself and handle all i/o on our own:
+		The script.py looks like this --> 
+			
+			#!/usr/bin/env python
+
+			from __future__ import print_function
+
+			import argparse
+			import hpccm
+			from hpccm.building_blocks import gnu, mlnx_ofed, openmpi
+			from hpccm.primitives import baseimage
+
+			parser = argparse.ArgumentParser(description='HPCCM Tutorial')
+			parser.add_argument('--format', type=str, default='docker',
+								choices=['docker', 'singularity'],
+								help='Container specification format (default: docker)')
+			args = parser.parse_args()
+
+			Stage0 = hpccm.Stage()
+
+			### Start "Recipe"
+			Stage0 += baseimage(image='nvidia/cuda:10.2-devel-centos7')
+			Stage0 += mlnx_ofed(version='5.0-2.1.8.0')
+			compiler = gnu()
+			Stage0 += compiler
+			Stage0 += openmpi(cuda=True, infiniband=True, toolchain=compiler.toolchain,
+							 version='4.0.3')
+			### End "Recipe"
+
+			hpccm.config.set_container_format(args.format)
+
+			print(Stage0)
+		
+		The script is run by giving the command below -->
+			./script.py > Singularity.def
+			# whatever is printed by the script is written in a file named Singularity.def, so donot print anything else other than the Stage0
+			# all the building blocks and primitives return strings which are appended into the Stage0 variable
+		
+	# Building blocks and primitives
+		Building blocks are packages which can specified in the recipe and it will be installed in the singularity when it is built
+		Primitives are the commands
+		
+	
+	
+2. Build singularity image file
+	sudo singularity build <image_file.sif> Singularity.def
+	sudo https_proxy=http://proxy-eu.shell.com:8080 http_proxy=http://proxy-eu.shell.com:8080 singularity build <image_file.sif> Singularity.def
+
+
+3. Run the singularity image
+	singularity run -B /glb/home/s_bpa2pa/Migration/unAsMaps/:/opt/ /glb/home/s_bpa2pa/Migration/unAsMaps/Maps.sif
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+pip3 install --proxy proxy-eu.shell.com:8080 -r /path/to/requirements.txt #install a list of items in requirements.txt file
+Ubuntu 20.04.1 LTS
+Release:	20.04
+Codename:	focal
+sudo https_proxy=http://proxy-eu.shell.com:8080 http_proxy=http://proxy-eu.shell.com:8080 apt-get update
