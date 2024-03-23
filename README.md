@@ -1,5 +1,5 @@
 # BoilerPlateCode
 * Contains 
-    - CMAKE project for C++
-    - SBATCH scripts
-    - References  
+   - Make C++ project
+   - SBATCH run scripts
+   - Documentation references for all the major tools 
