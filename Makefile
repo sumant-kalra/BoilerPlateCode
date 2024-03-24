@@ -1,5 +1,14 @@
+MPI = 0
+
+CC = gcc
 CXX = g++
-CXX_FLAGS = -O2 -Wall -Werror -std=c++17 -save-temps -DDEBUG=0
+
+ifeq (${MPI},1)
+	CC = mpicc
+	CXX = mpic++ 
+endif
+
+CXX_FLAGS = -O2 -Wall -Werror -std=c++17 -save-temps -DDEBUG=0 -DMPI_APP=${MPI}
 LD_FLAGS = -g # -L<LibraryPath_1> -L<LibraryPath_2>
 
 #LD_LIBS = -l<LibraryName_1> -l<LibraryName_2>
@@ -9,8 +18,8 @@ INSTALL_DIRECTORY = ${MAKE_FILE_ROOT}/build
 TEMP_DIRECTORY = ${MAKE_FILE_ROOT}/temp
 SRC_DIRECTORY = ${MAKE_FILE_ROOT}/src
 
-SRC_FILES = `ls ${SRC_DIRECTORY}/*.cpp`
-OBJ_FILES = `ls ${TEMP_DIRECTORY}/*.o`
+SRC_FILES = `ls ${SRC_DIRECTORY}/*.cpp`	# contain absolute paths
+OBJ_FILES = `ls ${TEMP_DIRECTORY}/*.o`	# contain absolute paths
 
 APP_NAME = application 
 
