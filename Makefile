@@ -1,6 +1,10 @@
 # -- User inputs -- #
 MPI = 0
 DEBUG = 0
+
+LD_FLAGS = -g # -L<LibraryPath_1> -L<LibraryPath_2>
+#LD_LIBS = -l<LibraryName_1> -l<LibraryName_2>
+
 # ----------------- #
 
 CC = gcc
@@ -12,9 +16,6 @@ ifeq (${MPI},1)
 endif
 
 CXX_FLAGS = -O2 -Wall -Werror -std=c++17 -save-temps -DPR_DEBUG=${DEBUG} -DMPI_APP=${MPI}
-LD_FLAGS = -g # -L<LibraryPath_1> -L<LibraryPath_2>
-
-#LD_LIBS = -l<LibraryName_1> -l<LibraryName_2>
 
 MAKE_FILE_ROOT = ${PWD}
 INSTALL_DIRECTORY = ${MAKE_FILE_ROOT}/build
