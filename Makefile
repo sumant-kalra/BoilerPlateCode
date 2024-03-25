@@ -31,7 +31,7 @@ all: link compile
 
 link: compile
 	cd ${TEMP_DIRECTORY}; \
-	${CXX} ${OBJ_FILES} -o ${APP_NAME} ${LD_FLAGS}
+	${CXX} ${OBJ_FILES} -o ${APP_NAME} ${LD_FLAGS} ${LD_LIBS}
 
 compile:
 	mkdir ${TEMP_DIRECTORY}; \
