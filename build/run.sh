@@ -15,13 +15,13 @@
 #SBATCH --mail-user=sumant.kalra@hpe.com
 #SBATCH --time=10:00:00
 
-module load <module1_RequiredForApp>
-module load <module2_RequiredForApp>
-module load <moduleN_RequiredForApp>
+source ./../modulesLoad.sh 
 
-export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+# If the application uses OPENMP threads:
+# export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
-srun app [appArg1] [appArg2] ...  [appArgN]
+# Run the application here:
+# srun app [appArg1] [appArg2] ...  [appArgN]
 
 # 1. Test the script without sbatch 
 # 2. Submit to slurm (if successful) with: sbatch run.sh 
