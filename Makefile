@@ -4,6 +4,7 @@ DEBUG = 0
 
 LD_FLAGS = -g # -L<LibraryPath_1> -L<LibraryPath_2>
 #LD_LIBS = -l<LibraryName_1> -l<LibraryName_2>
+#MISC_CXX_FLAGS = 
 
 # ----------------- #
 
@@ -15,7 +16,9 @@ ifeq (${MPI},1)
 	CXX = mpic++ 
 endif
 
-CXX_FLAGS = -O2 -Wall -Werror -std=c++17 -save-temps -DPR_DEBUG=${DEBUG} -DMPI_APP=${MPI}
+CXX_FLAGS = -O2 -Wall -Werror -std=c++17 -save-temps -DPR_DEBUG=${DEBUG} -DMPI_APP=${MPI} ${MISC_CXX_FLAGS}
+
+# --------------------------------------------------------------------------------------- #
 
 MAKE_FILE_ROOT = ${PWD}
 INSTALL_DIRECTORY = ${MAKE_FILE_ROOT}/build

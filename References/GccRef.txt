@@ -11,11 +11,20 @@ Compiler flags:
 
 * Linking Stage (works for both static and dynamic linking):
    > g++ -g -o myApp myprog.o support1.o support1.o -L<AbsPath_Library1> -L<AbsPath_Library2> -L<AbsPath_LibraryN> -l<LibName1> -l<LibName2> -l<LibNameN>
+   For example: 
+    * Dynamic library name = libmath.so, then OPT_1 '-lmath' or OPT_2 '-l:libmath.so'
+    * Static library name  = libmath.a,  then OPT_1 '-lmath' or OPT_2 '-l:libmath.a'
+   Best Practice:
+    - Do not keep static and dynamic versions of a library in the same directory. Use OPT_1. 
+    - If they are in the same directory, use OPT_2 but OPT_2 is not portable across different environments. 
+
 
 * LD_LIBRARY_PATH environment variable: 
    > export LD_LIBRARY_PATH=/path/to/directory1:/path/to/directory2
     - providing library path at run-time for linking with the dynamic libraries defined with -l flags during linking stage of compilation 
     - takes precedence over the standard library paths and other paths defined with -L flags during linking stage of compilation
+    - Mandatory for the dynamic linked libraries; OS needs to know; -L flag is for the compiler to know.
+    - add in the run script.
 
 * Creating a static library:
    > g++ -c -o file1.o file1.cpp
