@@ -9,8 +9,8 @@
 #SBATCH --exclusive   
 
 #SBATCH --partition=partitionName
-#SBATCH --output=outputs/result-%j.out       
-#SBATCH --error=outputs/result-%j.err
+#SBATCH --output=outputs/o-result-%j.out       
+#SBATCH --error=outputs/e-result-%j.err
 #SBATCH --mail-type=FAIL,END
 #SBATCH --mail-user=sumant.kalra@hpe.com
 #SBATCH --time=10:00:00
