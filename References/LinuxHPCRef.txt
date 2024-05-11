@@ -78,6 +78,7 @@ nvidia-smi -h
 /usr/sbin/ibstat
 cxistatus
 ip addr show
+ip a 
 
 # OS distribution and kernel version
 uname -a 
@@ -93,8 +94,14 @@ hostname
 # Installed packages 
 rpm -qa
 
-# Running services
-systemctl list-units --type=service --all
+# Running services (background processes) managed by systemctl (centralized service manager)
+sudo systemctl list-units --type=service --all
+sudo systemctl start <service-name>
+sudo systemctl stop <service-name>
+sudo systemctl restart <service-name>
+sudo systemctl enable <service-name>
+sudo systemctl disable <service-name> 
+sudo systemctl status <service-name>
 
 # System hardware information
 lshw
