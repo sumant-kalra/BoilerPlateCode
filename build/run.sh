@@ -15,7 +15,8 @@
 #SBATCH --mail-user=sumant.kalra@hpe.com
 #SBATCH --time=10:00:00
 
-source ./../modulesLoad.sh 
+source ./../modulesLoad.sh
+./application  
 
 # If the application uses OPENMP threads:
 # export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
