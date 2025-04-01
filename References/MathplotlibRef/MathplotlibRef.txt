@@ -1,137 +1,142 @@
 Official Documentation: https://matplotlib.org/stable/users/index.html
 Tutorial:  https://www.youtube.com/watch?v=OZOOLe2imFo&ab_channel=NeuralNine
 		   https://pbpython.com/effective-matplotlib.html 
-⸻
+⸻⸻⸻⸻⸻⸻
+Matplotlib for the tasks
+⸻⸻⸻⸻⸻⸻
+1. 2D plots: 
+	- Plotting functions 
+	- Set the range of the axes 
+	- Plotting data points from a file 
+	- Multiple dependent variables with a single independent variable on the same graph 
+	- Plotting on the same graph 
+	- Saving the graphs in a file 
+2. 3D plots 
+3. Animations
 
-pip install matplotlib
-import matplotlib.pyplot as plt
+
+-------------------------------------------------------------------------------------------------------------------
+Sample Programs
+-------------------------------------------------------------------------------------------------------------------
+### Matplotlib Assignment: Mastering 2D, 3D, and Animations (Solutions)
+
+# Import necessary libraries
 import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import pandas as pd
+import matplotlib.animation as animation
 
-⸻
+## **🔹 Section 1: 2D Plots**
 
-1. Line Plot (Trend Analysis)
+# **Q1: Plotting Mathematical Functions**
+x = np.linspace(-10, 10, 400)
+y1 = np.sin(x)
+y2 = np.cos(x)
 
-# Data
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
-
-# Create Plot
-plt.plot(x, y, label="Sine Wave", color="blue", linestyle="--")
-
-# Labels and Title
-plt.xlabel("X Axis")
-plt.ylabel("Y Axis")
-plt.title("Line Plot Example")
-
-# Add Legend
+plt.plot(x, y1, 'r--', label='sin(x)')
+plt.plot(x, y2, 'b-', label='cos(x)')
+plt.xlabel('X values')
+plt.ylabel('Y values')
+plt.title('Sine and Cosine Functions')
 plt.legend()
-
-# Show Plot
+plt.grid(True)
 plt.show()
 
-⸻
-
-2. Scatter Plot (Data Distribution)
-
-x = np.random.rand(50)
-y = np.random.rand(50)
-
-plt.scatter(x, y, color="red", marker="o")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.title("Scatter Plot Example")
+# **Q2: Setting the Range of Axes**
+plt.plot(x, y1, 'r--', label='sin(x)')
+plt.plot(x, y2, 'b-', label='cos(x)')
+plt.xlim(-5, 5)
+plt.ylim(-1.5, 1.5)
+plt.grid(True)
+plt.legend()
 plt.show()
 
-⸻
-
-3. Bar Chart (Comparing Categories)
-
-categories = ["A", "B", "C", "D"]
-values = [5, 7, 3, 8]
-
-plt.bar(categories, values, color=["blue", "green", "red", "orange"])
-plt.xlabel("Categories")
-plt.ylabel("Values")
-plt.title("Bar Chart Example")
+# **Q3: Plotting Data Points from a File**
+# Assuming a file 'data.csv' exists with 'x' and 'y' columns
+data = pd.read_csv("data.csv")
+plt.scatter(data['x'], data['y'], label='Data Points')
+plt.plot(data['x'], np.poly1d(np.polyfit(data['x'], data['y'], 1))(data['x']), 'r-', label='Best-Fit Line')
+plt.legend()
 plt.show()
 
-⸻
-
-4. Histogram (Data Distribution)
-
-data = np.random.randn(1000)
-
-plt.hist(data, bins=30, color="purple", alpha=0.7)
-plt.xlabel("Value")
-plt.ylabel("Frequency")
-plt.title("Histogram Example")
+# **Q4: Multiple Dependent Variables on the Same Graph**
+y1 = x**2
+y2 = x**3
+plt.plot(x, y1, 'g-', label='x^2')
+plt.plot(x, y2, 'm-', label='x^3')
+plt.legend()
 plt.show()
 
-⸻
+# **Q5: Subplots**
+fig, ax = plt.subplots(2, 1)
+y1 = np.exp(x)
+y2 = np.log(np.abs(x) + 0.1)
 
-5. Pie Chart (Proportional Data Representation)
-
-labels = ["Apples", "Bananas", "Cherries", "Dates"]
-sizes = [15, 30, 45, 10]
-colors = ["gold", "yellowgreen", "lightcoral", "lightskyblue"]
-
-plt.pie(sizes, labels=labels, colors=colors, autopct="%1.1f%%", startangle=140)
-plt.title("Pie Chart Example")
-plt.show()
-
-⸻
-
-6. Subplots (Multiple Plots in One Figure)
-
-Useful for comparing different datasets in one view.
-
-fig, ax = plt.subplots(2, 2, figsize=(8, 6))
-
-x = np.linspace(0, 10, 100)
-ax[0, 0].plot(x, np.sin(x))
-ax[0, 0].set_title("Sine Wave")
-
-ax[0, 1].plot(x, np.cos(x))
-ax[0, 1].set_title("Cosine Wave")
-
-ax[1, 0].scatter(np.random.rand(50), np.random.rand(50))
-ax[1, 0].set_title("Scatter Plot")
-
-ax[1, 1].hist(np.random.randn(1000), bins=30)
-ax[1, 1].set_title("Histogram")
-
+ax[0].plot(x, y1, 'r-', label='e^x')
+ax[0].set_title('Exponential Function')
+ax[0].legend()
+ax[1].plot(x, y2, 'b-', label='ln(x)')
+ax[1].set_xscale('log')
+ax[1].set_title('Logarithmic Function')
+ax[1].legend()
 plt.tight_layout()
 plt.show()
 
-⸻
-
-7. 3D Plot (Visualizing Surfaces)
-
-Used in physics, engineering, and simulations.
-
-from mpl_toolkits.mplot3d import Axes3D
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-
-x = np.linspace(-5, 5, 100)
-y = np.linspace(-5, 5, 100)
-X, Y = np.meshgrid(x, y)
-Z = np.sin(np.sqrt(X**2 + Y**2))
-
-ax.plot_surface(X, Y, Z, cmap="viridis")
-ax.set_title("3D Surface Plot")
+# **Q6: Saving the Graphs to a File**
+plt.plot(x, y1, 'g-', label='x^2')
+plt.plot(x, y2, 'm-', label='x^3')
+plt.legend()
+plt.savefig("plot.png", dpi=300)
+plt.savefig("plot.pdf")
 plt.show()
 
+## **🔹 Section 2: 3D Plots**
 
-⸻
+# **Q7: 3D Surface Plot**
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+x = np.linspace(-5, 5, 50)
+y = np.linspace(-5, 5, 50)
+X, Y = np.meshgrid(x, y)
+Z = np.sin(np.sqrt(X**2 + Y**2))
+ax.plot_surface(X, Y, Z, cmap='plasma')
+plt.show()
 
-Matplotlib Advanced Features
-	•	Customization (colors, fonts, markers, grid styles).
-	•	Annotations & Text (adding notes to plots).
-	•	Interactivity (Zoom, pan, save).
-	•	Animation (dynamic updating of plots).
+# **Q8: 3D Scatter Plot**
+x = np.random.rand(100)
+y = np.random.rand(100)
+z = np.random.rand(100)
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(x, y, z, c=z, cmap='coolwarm')
+plt.show()
 
-	Customization Guide: https://matplotlib.org/stable/tutorials/introductory/customizing.html
+## **🔹 Section 3: Animations**
 
-⸻
+# **Q9: Animated Line Plot**
+fig, ax = plt.subplots()
+x = np.linspace(0, 10, 100)
+line, = ax.plot(x, np.sin(x))
+
+def update(frame):
+    line.set_ydata(np.sin(x + frame / 10))
+    return line,
+
+ani = animation.FuncAnimation(fig, update, frames=100, interval=50)
+plt.show()
+
+# **Q10: Animated Scatter Plot with Changing Colors**
+fig, ax = plt.subplots()
+x = np.random.rand(50)
+y = np.random.rand(50)
+colors = np.random.rand(50)
+sc = ax.scatter(x, y, c=colors, cmap='viridis')
+
+def update(frame):
+    sc.set_offsets(np.c_[np.random.rand(50), np.random.rand(50)])
+    sc.set_array(np.random.rand(50))
+    return sc,
+
+ani = animation.FuncAnimation(fig, update, frames=50, interval=100)
+plt.show()
