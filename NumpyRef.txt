@@ -1,0 +1,157 @@
+NumPy Practical Tutorial: A Beginner to Advanced Guide
+⸻
+
+pip install numpy
+import numpy as np  # Standard convention
+
+⸻
+
+1. Creating NumPy Arrays
+
+From Python Lists
+
+a = np.array([1, 2, 3, 4])  # 1D array
+print(a)  # Output: [1 2 3 4]
+
+Multi-dimensional Array
+
+b = np.array([[1, 2, 3], [4, 5, 6]])  # 2D array
+print(b)
+
+Creating Arrays with Specific Values
+
+np.zeros((2,3))   # 2x3 array filled with 0s
+np.ones((3,3))    # 3x3 array filled with 1s
+np.full((2,2), 5) # 2x2 array filled with 5
+np.eye(3)         # 3x3 Identity matrix
+
+Random Arrays
+
+np.random.rand(2,2)      # Uniform random numbers (0 to 1)
+np.random.randn(3,3)     # Standard normal distribution (mean=0, std=1)
+np.random.randint(10, 50, (3,3))  # Random integers between 10-50
+
+Linspace & Arange (Range of Numbers)
+
+np.linspace(0, 10, 5)  # 5 evenly spaced numbers between 0 and 10
+np.arange(0, 10, 2)    # Numbers from 0 to 10 with step 2
+
+⸻
+
+2. Array Shape & Reshaping
+
+a = np.array([[1,2,3],[4,5,6]])
+print(a.shape)  # (2,3)
+
+b = a.reshape(3,2)  # Change shape to (3x2)
+print(b)
+
+⸻
+
+3. Indexing & Slicing (Similar to Lists)
+
+arr = np.array([10, 20, 30, 40, 50])
+print(arr[2])      # 30
+print(arr[1:4])    # [20 30 40]
+print(arr[-1])     # 50
+
+For Multi-dimensional Arrays
+
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+print(matrix[1, 2])  # Row 1, Col 2 → Output: 6
+print(matrix[:,1])   # All rows, Column 1
+
+⸻
+
+4. Element-wise Operations
+
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+
+print(a + b)  # [5 7 9]
+print(a * b)  # [4 10 18] (Element-wise multiplication)
+print(a ** 2) # [1 4 9] (Element-wise power)
+
+⸻
+
+5. Statistical Operations
+
+data = np.array([10, 20, 30, 40, 50])
+print(np.mean(data))   # Mean
+print(np.median(data)) # Median
+print(np.std(data))    # Standard Deviation
+print(np.sum(data))    # Sum
+
+⸻
+
+6. Matrix Operations
+
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[5, 6], [7, 8]])
+
+print(A @ B)          # Matrix multiplication
+print(np.dot(A, B))   # Same as A @ B
+print(A.T)            # Transpose of A
+print(np.linalg.inv(A)) # Inverse of A
+
+⸻
+
+7. Broadcasting (Different Sized Arrays)
+
+A = np.array([[1, 2, 3], [4, 5, 6]])
+B = np.array([1, 2, 3])
+
+print(A + B)  # Automatically expands B to match A
+
+⸻
+
+8. Filtering Arrays (Boolean Indexing)
+
+arr = np.array([10, 20, 30, 40, 50])
+print(arr[arr > 25])  # [30 40 50]
+
+⸻
+
+9. Saving & Loading Arrays
+
+np.save("my_array.npy", arr)      # Save array
+loaded_arr = np.load("my_array.npy") # Load array
+
+⸻
+
+10. NumPy in Machine Learning
+
+(Example: Linear Regression using NumPy)
+
+# Generating sample data
+X = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 6, 8, 10])
+
+# Computing slope (m) and intercept (c) using Least Squares
+m = np.sum((X - np.mean(X)) * (y - np.mean(y))) / np.sum((X - np.mean(X)) ** 2)
+c = np.mean(y) - m * np.mean(X)
+
+# Making predictions
+y_pred = m * X + c
+
+print(f"Equation of Line: y = {m:.2f}x + {c:.2f}")
+
+-------------------------------------------------------------
+NumPy’s random Module: Generating Random Numbers Efficiently
+-------------------------------------------------------------
+Function	                            Purpose	                                            Example
+
+np.random.rand(n)	                    Random floats in [0, 1)	                            np.random.rand(5)
+np.random.randint(low, high, size)	    Random integers in [low, high)	                    np.random.randint(1, 100, (3,3))
+np.random.randn(n)	                    Standard normal distribution (mean=0, std=1)	    np.random.randn(5)
+np.random.normal(mu, sigma, size)	    Normal distribution with mean mu, std sigma	        np.random.normal(5, 2, 10)
+np.random.choice(arr, size, replace)	Random sampling from an array	                    np.random.choice(arr, 3, replace=False)
+np.random.shuffle(arr)	                Shuffle in-place	                                np.random.shuffle(arr)
+np.random.permutation(arr)	            Shuffle (returns new array)	                        np.random.permutation(arr)
+np.random.seed(n)	                    Set seed for reproducibility	                    np.random.seed(42)
+
+⸻
+
+🔗 More Resources
+	•	NumPy Quick Start: https://numpy.org/doc/stable/user/quickstart.html 
+	•	NumPy for Data Science: https://numpy.org/doc/stable/user/numpy-for-matlab-users.html 

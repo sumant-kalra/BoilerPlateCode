@@ -1,0 +1,137 @@
+Official Documentation: https://matplotlib.org/stable/users/index.html
+Tutorial:  https://www.youtube.com/watch?v=OZOOLe2imFo&ab_channel=NeuralNine
+		   https://pbpython.com/effective-matplotlib.html 
+⸻
+
+pip install matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+⸻
+
+1. Line Plot (Trend Analysis)
+
+# Data
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+# Create Plot
+plt.plot(x, y, label="Sine Wave", color="blue", linestyle="--")
+
+# Labels and Title
+plt.xlabel("X Axis")
+plt.ylabel("Y Axis")
+plt.title("Line Plot Example")
+
+# Add Legend
+plt.legend()
+
+# Show Plot
+plt.show()
+
+⸻
+
+2. Scatter Plot (Data Distribution)
+
+x = np.random.rand(50)
+y = np.random.rand(50)
+
+plt.scatter(x, y, color="red", marker="o")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.title("Scatter Plot Example")
+plt.show()
+
+⸻
+
+3. Bar Chart (Comparing Categories)
+
+categories = ["A", "B", "C", "D"]
+values = [5, 7, 3, 8]
+
+plt.bar(categories, values, color=["blue", "green", "red", "orange"])
+plt.xlabel("Categories")
+plt.ylabel("Values")
+plt.title("Bar Chart Example")
+plt.show()
+
+⸻
+
+4. Histogram (Data Distribution)
+
+data = np.random.randn(1000)
+
+plt.hist(data, bins=30, color="purple", alpha=0.7)
+plt.xlabel("Value")
+plt.ylabel("Frequency")
+plt.title("Histogram Example")
+plt.show()
+
+⸻
+
+5. Pie Chart (Proportional Data Representation)
+
+labels = ["Apples", "Bananas", "Cherries", "Dates"]
+sizes = [15, 30, 45, 10]
+colors = ["gold", "yellowgreen", "lightcoral", "lightskyblue"]
+
+plt.pie(sizes, labels=labels, colors=colors, autopct="%1.1f%%", startangle=140)
+plt.title("Pie Chart Example")
+plt.show()
+
+⸻
+
+6. Subplots (Multiple Plots in One Figure)
+
+Useful for comparing different datasets in one view.
+
+fig, ax = plt.subplots(2, 2, figsize=(8, 6))
+
+x = np.linspace(0, 10, 100)
+ax[0, 0].plot(x, np.sin(x))
+ax[0, 0].set_title("Sine Wave")
+
+ax[0, 1].plot(x, np.cos(x))
+ax[0, 1].set_title("Cosine Wave")
+
+ax[1, 0].scatter(np.random.rand(50), np.random.rand(50))
+ax[1, 0].set_title("Scatter Plot")
+
+ax[1, 1].hist(np.random.randn(1000), bins=30)
+ax[1, 1].set_title("Histogram")
+
+plt.tight_layout()
+plt.show()
+
+⸻
+
+7. 3D Plot (Visualizing Surfaces)
+
+Used in physics, engineering, and simulations.
+
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+x = np.linspace(-5, 5, 100)
+y = np.linspace(-5, 5, 100)
+X, Y = np.meshgrid(x, y)
+Z = np.sin(np.sqrt(X**2 + Y**2))
+
+ax.plot_surface(X, Y, Z, cmap="viridis")
+ax.set_title("3D Surface Plot")
+plt.show()
+
+
+⸻
+
+Matplotlib Advanced Features
+	•	Customization (colors, fonts, markers, grid styles).
+	•	Annotations & Text (adding notes to plots).
+	•	Interactivity (Zoom, pan, save).
+	•	Animation (dynamic updating of plots).
+
+	Customization Guide: https://matplotlib.org/stable/tutorials/introductory/customizing.html
+
+⸻
