@@ -1,0 +1,124 @@
+🔹 Creating 3D Plots Using Matplotlib
+
+Matplotlib provides a powerful tool for 3D plotting through the mpl_toolkits.mplot3d module. With it, you can create various 3D visualizations like surface plots, scatter plots, wireframes, and contour plots.
+
+⸻
+
+🔹 Steps to Create a 3D Plot
+	1.	Import Required Libraries
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+
+	2.	Create a Figure with a 3D Axis
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')  # 3D projection
+
+
+	3.	Generate Data for Plotting
+	•	Create x and y values using np.linspace().
+	•	Generate Z values as a function of X and Y (e.g., Z = sin(sqrt(X² + Y²))).
+	•	Use np.meshgrid() to create a grid of X, Y coordinates.
+	4.	Plot the 3D Graph
+	•	Use ax.plot_surface() for surface plots.
+	•	Use ax.scatter() for scatter plots.
+	•	Use ax.plot_wireframe() for wireframe plots.
+
+⸻
+
+🔹 Example 1: 3D Surface Plot
+
+A surface plot represents a function Z = f(X, Y).
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Generate X, Y data
+x = np.linspace(-5, 5, 50)
+y = np.linspace(-5, 5, 50)
+X, Y = np.meshgrid(x, y)
+Z = np.sin(np.sqrt(X**2 + Y**2))  # Function for Z values
+
+# Create a 3D figure
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot surface
+ax.plot_surface(X, Y, Z, cmap='viridis')
+
+# Labels and title
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z-axis")
+ax.set_title("3D Surface Plot")
+
+plt.show()
+
+🔹 What does this do?
+	•	Generates a 3D surface where Z = sin(√(X² + Y²)).
+	•	Uses cmap='viridis' for color mapping.
+	•	Labels axes and displays the plot.
+
+⸻
+
+🔹 Example 2: 3D Scatter Plot
+
+A scatter plot represents discrete points in 3D space.
+
+# Random 3D data
+x = np.random.rand(100)
+y = np.random.rand(100)
+z = np.random.rand(100)
+
+# Create a 3D scatter plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(x, y, z, c=z, cmap='coolwarm')
+
+# Labels and title
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z-axis")
+ax.set_title("3D Scatter Plot")
+
+plt.show()
+
+🔹 What does this do?
+	•	Creates a scatter plot with random x, y, z points.
+	•	Colors points based on the z values using cmap='coolwarm'.
+
+⸻
+
+🔹 Example 3: 3D Wireframe Plot
+
+A wireframe plot shows the structure of a 3D surface.
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot wireframe
+ax.plot_wireframe(X, Y, Z, color='black')
+
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_zlabel("Z-axis")
+ax.set_title("3D Wireframe Plot")
+
+plt.show()
+
+🔹 What does this do?
+	•	Draws a wireframe of Z = sin(√(X² + Y²)) without filling surfaces.
+	•	Uses ax.plot_wireframe() instead of ax.plot_surface().
+
+⸻
+
+🔹 Summary of 3D Plot Types
+
+Plot Type	Function Used	Description
+Surface Plot	ax.plot_surface(X, Y, Z, cmap=…)	Displays a smooth 3D surface
+Scatter Plot	ax.scatter(x, y, z, c=z, cmap=…)	Plots discrete points in 3D
+Wireframe Plot	ax.plot_wireframe(X, Y, Z)	Displays a mesh without filling surfaces
