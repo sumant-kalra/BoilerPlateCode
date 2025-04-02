@@ -56,6 +56,9 @@ plt.show()
 # Assuming a file 'data.csv' exists with 'x' and 'y' columns
 data = pd.read_csv("data.csv")
 plt.scatter(data['x'], data['y'], label='Data Points')
+# Curve fitting on y for x with a 'degree' polynomial 
+# coeff = np.polyfit(x,y,degree)
+# coeff: an array of constant coeffients of the standard n degree polynomial; coeff[0] -> the largest degree 
 plt.plot(data['x'], np.poly1d(np.polyfit(data['x'], data['y'], 1))(data['x']), 'r-', label='Best-Fit Line')
 plt.legend()
 plt.show()
