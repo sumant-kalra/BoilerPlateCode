@@ -1,0 +1,222 @@
+Official Pandas Documentation: https://pandas.pydata.org/docs/
+Pandas is a powerful library for data manipulation and analysis in Python. It provides easy-to-use data structures like DataFrames and Series to work efficiently with structured data.
+
+⸻
+
+🔹 1. What is Pandas?
+	•	Pandas is built on NumPy and provides functionalities similar to Excel and SQL for Python.
+	•	It is used for data cleaning, transformation, analysis, and visualization.
+
+🔹 Installing Pandas
+
+If you haven’t installed it yet, use:
+
+pip install pandas
+
+
+
+⸻
+
+🔹 2. Pandas Data Structures
+
+Pandas provides two main data structures:
+
+Data Structure	Description
+Series	One-dimensional array (like a column)
+DataFrame	Two-dimensional table (like an Excel sheet)
+
+
+
+⸻
+
+🔹 3. Pandas Series (1D Data)
+
+A Series is a labeled 1D array that can hold any data type.
+
+🔹 Creating a Pandas Series
+
+import pandas as pd
+
+# Create a Series from a list
+data = [10, 20, 30, 40, 50]
+s = pd.Series(data)
+print(s)
+
+🔹 Output:
+
+0    10
+1    20
+2    30
+3    40
+4    50
+dtype: int64
+
+🔹 Custom Index in Series
+
+s = pd.Series([10, 20, 30], index=['a', 'b', 'c'])
+print(s)
+
+🔹 Output:
+
+a    10
+b    20
+c    30
+dtype: int64
+
+
+
+⸻
+
+🔹 4. Pandas DataFrame (2D Data)
+
+A DataFrame is a table-like structure with rows and columns.
+
+🔹 Creating a DataFrame from a Dictionary
+
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Age': [25, 30, 35],
+    'Salary': [50000, 60000, 70000]
+}
+df = pd.DataFrame(data)
+print(df)
+
+🔹 Output:
+
+     Name  Age  Salary
+0   Alice   25  50000
+1     Bob   30  60000
+2  Charlie   35  70000
+
+🔹 Importing Data from CSV
+
+df = pd.read_csv("data.csv")
+print(df.head())  # Display first 5 rows
+
+
+
+⸻
+
+🔹 5. Basic DataFrame Operations
+
+🔹 Viewing Data
+
+df.head()  # First 5 rows
+df.tail()  # Last 5 rows
+df.info()  # Summary of dataset
+df.describe()  # Statistical summary
+
+🔹 Selecting Columns
+
+print(df['Name'])  # Select single column
+print(df[['Name', 'Age']])  # Select multiple columns
+
+🔹 Selecting Rows
+
+print(df.iloc[0])   # Select first row
+print(df.loc[1])    # Select row with index 1
+print(df[df['Age'] > 28])  # Filter rows where Age > 28
+
+
+
+⸻
+
+🔹 6. Modifying Data in DataFrame
+
+🔹 Adding a New Column
+
+df['Bonus'] = df['Salary'] * 0.1
+print(df)
+
+🔹 Updating a Column
+
+df['Salary'] = df['Salary'] + 5000
+
+🔹 Removing a Column
+
+df.drop('Bonus', axis=1, inplace=True)  # axis=1 → column, inplace=True → modify original
+
+🔹 Removing Rows
+
+df.drop(0, axis=0, inplace=True)  # axis=0 → row
+
+
+
+⸻
+
+🔹 7. Handling Missing Data
+
+🔹 Checking for Missing Values
+
+print(df.isnull().sum())  # Count missing values in each column
+
+🔹 Filling Missing Values
+
+df.fillna(0, inplace=True)  # Replace NaN with 0
+df.fillna(df.mean(), inplace=True)  # Replace NaN with column mean
+
+🔹 Removing Rows with Missing Values
+
+df.dropna(inplace=True)
+
+
+
+⸻
+
+🔹 8. Grouping and Aggregating Data
+
+🔹 Grouping by a Column
+
+df.groupby('Age').mean()  # Group by Age and calculate mean
+
+🔹 Aggregating Data
+
+df.agg({'Salary': ['mean', 'max', 'min']})
+
+
+
+⸻
+
+🔹 9. Sorting Data
+
+🔹 Sorting by Column
+
+df.sort_values(by='Salary', ascending=False)
+
+
+
+⸻
+
+🔹 10. Exporting Data
+
+🔹 Saving to CSV
+
+df.to_csv("output.csv", index=False)
+
+🔹 Saving to Excel
+
+df.to_excel("output.xlsx", index=False)
+
+
+
+⸻
+
+🔹 Summary of Pandas Operations
+
+Operation	                                    Code
+Create Series	                                pd.Series([10, 20, 30])
+Create DataFrame	                            pd.DataFrame({'A': [1, 2]})
+Read CSV	                                    pd.read_csv("file.csv")
+Display Top Rows	                            df.head()
+Select Column	                                df['Column']
+Select Row	                                    df.iloc[0]
+Filter Data	                                    df[df['Age'] > 30]
+Add Column	                                    df['New'] = values
+Remove Column	                                df.drop('Column', axis=1)
+Fill Missing Values	                            df.fillna(0)
+Group Data	                                    df.groupby('Column').mean()
+Sort Data	                                    df.sort_values('Column')
+Save to CSV	                                    df.to_csv("file.csv")
+
+⸻
+
