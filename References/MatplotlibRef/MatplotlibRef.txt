@@ -14,9 +14,21 @@ Matplotlib for the tasks
 2. 3D plots 
 3. Animations
 
-
 -------------------------------------------------------------------------------------------------------------------
 Sample Programs
+-------------------------------------------------------------------------------------------------------------------
+# Plotting from python dictionary
+
+if __name__ == '__main__':
+    iterationsValue = {}
+    print('e^x : ', exp(-5, 100, iterationsValue))
+
+    iterValue = np.array(list(iterationsValue.items()))
+    
+    fig, ax = plt.subplots()
+    ax.plot(iterValue[:,0], iterValue[:,1])
+    plt.show()
+
 -------------------------------------------------------------------------------------------------------------------
 ### Matplotlib Assignment: Mastering 2D, 3D, and Animations (Solutions)
 
