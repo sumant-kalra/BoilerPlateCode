@@ -21,8 +21,8 @@ def exponentAnalysis( x, nIterations):
     for i in range(nIterations):
         result += term
         term = term*x/(i+1)
-        nIterResult2DArray[i][0] = i+1
-        nIterResult2DArray[i][1] = result
+        nIterResult2DArray[i,0] = i+1
+        nIterResult2DArray[i,1] = result
 
     return result, nIterResult2DArray
 
@@ -43,8 +43,8 @@ def exponent( x, relErrorMax, nMaxIterations):
         result += term
         term = term*x/(i+1)
         relError = math.fabs(term)/result
-        nIterResult2DArray[i][0] = i+1
-        nIterResult2DArray[i][1] = result
+        nIterResult2DArray[i,0] = i+1
+        nIterResult2DArray[i,1] = result
         i = i+1
 
     nIterResult2DArray = nIterResult2DArray[:i, :]
